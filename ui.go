@@ -83,10 +83,11 @@ func NewChatUI(cr *ChatRoom) *ChatUI {
 	}
 }
 
-func (ui *ChatUI) Run() error {
+func (ui *ChatUI) Run(addr string) error {
 	go ui.handleEvents()
 
 	defer ui.end()
+	ui.displaySelfMessage(addr)
 	return ui.app.Run()
 }
 

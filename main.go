@@ -24,12 +24,17 @@ func main() {
 
 	ctx := context.Background()
 
-	h, err := libp2p.New(ctx, libp2p.ListenAddrStrings("/ip4/0.0.0.0/tcp/0"))
+	h, err := libp2p.New(ctx, libp2p.DisableRelay())
 	if err != nil {
 		panic(err)
 	}
 
 	ps, err := pubsub.NewGossipSub(ctx, h)
+	if err != nil {
+		panic(err)
+	}
+
+	_, addr, err := newDHTDiscovery(ctx, h)
 	if err != nil {
 		panic(err)
 	}
@@ -53,7 +58,7 @@ func main() {
 
 	ui := NewChatUI(cr)
 
-	if err = ui.Run(); err != nil {
+	if err = ui.Run(addr); err != nil {
 		printErr("error runing chat ui: %s", err)
 	}
 }
